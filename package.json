@@ -1,0 +1,23 @@
+{
+  "name": "stylesheet-sync-checker",
+  "version": "1.0.0",
+  "description": "Find CSS files that are stale on a QA/prod domain compared to a dev domain.",
+  "type": "module",
+  "main": "scripts/run.js",
+  "bin": {
+    "stylesheet-sync-checker": "scripts/run.js"
+  },
+  "scripts": {
+    "check": "node scripts/run.js",
+    "report": "node scripts/run.js --report-only",
+    "clean": "find reports -type f ! -name '.gitkeep' -delete && find reports -type d -empty -delete"
+  },
+  "author": "",
+  "license": "ISC",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "playwright": "^1.64.0"
+  }
+}

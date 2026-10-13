@@ -1,0 +1,5 @@
+node_modules/
+config.js
+reports/*
+!reports/.gitkeep
+.DS_Store
