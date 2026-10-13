@@ -1,6 +1,6 @@
 {
   "name": "stylesheet-sync-checker",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Find CSS files that are stale on a QA/prod domain compared to a dev domain.",
   "type": "module",
   "main": "scripts/run.js",
