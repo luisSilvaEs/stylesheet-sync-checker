@@ -45,11 +45,15 @@ npx playwright install chromium
 
 ## Configuration
 
-Copy the example config and edit it:
+From inside the `stylesheet-sync-checker` folder you just cloned into, copy
+the example config to create your own (gitignored, so it's yours to edit
+freely — it won't be committed):
 
 ```bash
 cp config.example.js config.js
 ```
+
+That copies `config.example.js` as-is into `config.js`. Its contents are:
 
 ```js
 export const prodUrl = 'https://main--your-site--your-org.aem.page';
@@ -57,6 +61,12 @@ export const devUrl = 'http://localhost:3000'; // optional, this is the default
 export const pages = ['/', '/research/', '/playground/'];
 export const repoPath = '/Users/you/code/your-site'; // see note below
 ```
+
+Open `config.js` and replace those placeholder values with your own —
+`prodUrl` for the QA/prod domain to check, `devUrl` only if it's not
+`localhost:3000`, `pages` with the paths you want checked, and `repoPath`
+with the local checkout behind your dev server (see below for why that
+matters).
 
 Or skip the config file and pass flags directly:
 
