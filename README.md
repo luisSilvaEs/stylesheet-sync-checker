@@ -35,6 +35,8 @@ For each page path you give it:
 ## Installation
 
 ```bash
+git clone https://github.com/luisSilvaEs/stylesheet-sync-checker.git
+cd stylesheet-sync-checker
 npm install
 npx playwright install chromium
 ```
