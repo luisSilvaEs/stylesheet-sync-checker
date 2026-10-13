@@ -19,6 +19,7 @@ function parseArgs(argv) {
     else if (arg === '--dev') args.devUrl = argv[++i];
     else if (arg === '--pages') args.pages = argv[++i].split(',').map((p) => p.trim()).filter(Boolean);
     else if (arg === '--repo') args.repoPath = argv[++i];
+    else if (arg === '--tolerance-hours') args.toleranceHours = Number(argv[++i]);
     else if (arg === '--no-open') args.open = false;
     else if (arg === '--report-only') args.reportOnly = true;
   }
@@ -71,6 +72,7 @@ async function main() {
   const devUrl = args.devUrl ?? config.devUrl ?? 'http://localhost:3000';
   const pages = args.pages ?? config.pages;
   const repoPath = args.repoPath ?? config.repoPath ?? null;
+  const toleranceHours = args.toleranceHours ?? config.toleranceHours ?? 12;
 
   if (!prodUrl) {
     console.error(
@@ -88,6 +90,7 @@ async function main() {
   console.log(`Prod/QA: ${prodUrl}`);
   console.log(`Dev:     ${devUrl}`);
   console.log(`Pages:   ${pages.join(', ')}`);
+  console.log(`Tolerance: ${toleranceHours}h (gaps within this window count as up to date)`);
   if (repoPath) console.log(`Repo:    ${repoPath} (using git commit dates for dev)`);
   else if (/^https?:\/\/(localhost|127\.0\.0\.1)/.test(devUrl)) {
     console.log(
@@ -99,7 +102,7 @@ async function main() {
   console.log('Checking...');
 
   const result = await runComparison({
-    prodUrl, devUrl, pages, repoPath,
+    prodUrl, devUrl, pages, repoPath, toleranceHours,
   });
 
   const stamp = result.generatedAt.replace(/[:.]/g, '-');

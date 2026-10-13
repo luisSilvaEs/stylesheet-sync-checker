@@ -25,3 +25,9 @@ export const pages = [
 // Last-Modified produces false positives. When set, dev dates are read from
 // `git log` in this path instead.
 export const repoPath = undefined; // e.g. '/Users/you/code/your-eds-site'
+
+// Optional. How many hours of lag between prod/QA and dev to tolerate before
+// flagging a stylesheet as "behind". Deploy/sync jobs aren't instant, so a
+// small gap doesn't necessarily mean anything is actually wrong. Defaults
+// to 12 if omitted.
+export const toleranceHours = 12;

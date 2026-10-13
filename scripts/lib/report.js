@@ -190,6 +190,7 @@ export function renderHtmlReport(result) {
   <div class="meta">Prod/QA: ${escapeHtml(result.prodUrl)}</div>
   <div class="meta">Dev: ${escapeHtml(result.devUrl)}</div>
   ${result.repoPath ? `<div class="meta">Repo (for dev dates): ${escapeHtml(result.repoPath)}</div>` : ''}
+  <div class="meta">Tolerance: ${result.toleranceHours}h (gaps within this window count as up to date)</div>
   <div class="meta">Generated ${fmtDate(result.generatedAt)}</div>
 
   <div class="summary">

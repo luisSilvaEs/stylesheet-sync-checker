@@ -41,22 +41,31 @@ async function gitDateForDevFile(repoPath, pathname) {
   }
 }
 
-function verdictFor({ prod, dev, sameFile }) {
+/**
+ * Deploys aren't instant — a prod/QA sync job can legitimately lag dev by
+ * some amount of time without anything actually being "behind." toleranceMs
+ * absorbs that normal lag: a gap within tolerance is still reported as "ok".
+ */
+function verdictFor({ prod, dev, sameFile }, toleranceMs) {
   if (sameFile && prod.status === 200 && dev.status === 200) return 'ok';
   if (prod.lastModified && dev.lastModified) {
-    if (prod.lastModified.getTime() === dev.lastModified.getTime()) return 'ok';
-    return prod.lastModified.getTime() < dev.lastModified.getTime() ? 'behind' : 'ahead';
+    const diffMs = dev.lastModified.getTime() - prod.lastModified.getTime();
+    if (Math.abs(diffMs) <= toleranceMs) return 'ok';
+    return diffMs > 0 ? 'behind' : 'ahead';
   }
   // Different hashed filename but no usable dates to confirm direction.
   return 'differs';
 }
 
+const DEFAULT_TOLERANCE_HOURS = 12;
+
 /**
  * Runs the full comparison across every configured page.
  */
 export async function runComparison({
-  prodUrl, devUrl, pages, repoPath = null,
+  prodUrl, devUrl, pages, repoPath = null, toleranceHours = DEFAULT_TOLERANCE_HOURS,
 }) {
+  const toleranceMs = toleranceHours * 60 * 60 * 1000;
   const useGitForDev = Boolean(repoPath) && isLocalhost(devUrl);
   const results = [];
 
@@ -82,7 +91,7 @@ export async function runComparison({
             devDateSource = 'git';
           }
         }
-        return { ...m, dev, devDateSource, verdict: verdictFor({ ...m, dev }) };
+        return { ...m, dev, devDateSource, verdict: verdictFor({ ...m, dev }, toleranceMs) };
       }));
 
       results.push({
@@ -101,6 +110,7 @@ export async function runComparison({
     prodUrl,
     devUrl,
     repoPath,
+    toleranceHours,
     pages: results,
   };
 }

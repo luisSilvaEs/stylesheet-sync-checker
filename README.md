@@ -28,7 +28,9 @@ For each page path you give it:
    before matching, so the same logical file is paired up even when its hash
    differs between builds (`main.a1b2c3d4.css` ↔ `main.f00dcafe.css`).
 3. For every matched pair, compares `Last-Modified`. Flags prod/QA as
-   **behind** when it's older than dev, **ahead** if the reverse, or
+   **behind** when it's older than dev by more than the configured
+   tolerance (default 12h — deploy/sync jobs aren't instant, so a small gap
+   on its own isn't a real problem), **ahead** if the reverse, or
    **differs** when a hash mismatch is the only signal and neither side
    exposes a usable date to confirm direction.
 4. Also lists any stylesheet found only on one side (**prod only** / **dev
@@ -62,13 +64,15 @@ export const prodUrl = 'https://main--your-site--your-org.aem.page';
 export const devUrl = 'http://localhost:3000'; // optional, this is the default
 export const pages = ['/', '/research/', '/playground/'];
 export const repoPath = '/Users/you/code/your-site'; // see note below
+export const toleranceHours = 12; // optional, this is the default
 ```
 
 Open `config.js` and replace those placeholder values with your own —
 `prodUrl` for the QA/prod domain to check, `devUrl` only if it's not
-`localhost:3000`, `pages` with the paths you want checked, and `repoPath`
-with the local checkout behind your dev server (see below for why that
-matters).
+`localhost:3000`, `pages` with the paths you want checked, `repoPath` with
+the local checkout behind your dev server (see below for why that matters),
+and `toleranceHours` if 12 hours of allowed deploy lag doesn't fit your
+project.
 
 Or skip the config file and pass flags directly:
 
@@ -76,7 +80,8 @@ Or skip the config file and pass flags directly:
 node scripts/run.js --prod https://main--your-site--your-org.aem.page \
   --dev http://localhost:3000 \
   --pages /,/research/,/playground/ \
-  --repo /Users/you/code/your-site
+  --repo /Users/you/code/your-site \
+  --tolerance-hours 12
 ```
 
 CLI flags always override `config.js`.
