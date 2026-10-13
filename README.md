@@ -12,6 +12,8 @@ including ones that serve bundled CSS with a content hash in the filename
 (e.g. `main.a1b2c3d4.css`), which a simple path-for-path comparison would
 miss.
 
+![Sample report, showing per-page tables of stylesheets flagged as up to date, behind, or ahead, plus prod-only/dev-only files](docs/sample-report.png)
+
 ## How it works
 
 For each page path you give it:
